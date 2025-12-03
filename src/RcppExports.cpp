@@ -12,16 +12,16 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // bootstrap_individual
-NumericMatrix bootstrap_individual(int B, Eigen::VectorXd epsilon_hat, Eigen::MatrixXd X, Eigen::MatrixXd W_hat, Eigen::MatrixXd S_hat_sqrt_inverse);
+NumericMatrix bootstrap_individual(const int B, const Eigen::VectorXd& epsilon_hat, const Eigen::MatrixXd& X, const Eigen::MatrixXd& W_hat, const Eigen::MatrixXd& S_hat_sqrt_inverse);
 RcppExport SEXP _graCRR_bootstrap_individual(SEXP BSEXP, SEXP epsilon_hatSEXP, SEXP XSEXP, SEXP W_hatSEXP, SEXP S_hat_sqrt_inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    Rcpp::traits::input_parameter< Eigen::VectorXd >::type epsilon_hat(epsilon_hatSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type X(XSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type W_hat(W_hatSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type S_hat_sqrt_inverse(S_hat_sqrt_inverseSEXP);
+    Rcpp::traits::input_parameter< const int >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type epsilon_hat(epsilon_hatSEXP);
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type W_hat(W_hatSEXP);
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type S_hat_sqrt_inverse(S_hat_sqrt_inverseSEXP);
     rcpp_result_gen = Rcpp::wrap(bootstrap_individual(B, epsilon_hat, X, W_hat, S_hat_sqrt_inverse));
     return rcpp_result_gen;
 END_RCPP

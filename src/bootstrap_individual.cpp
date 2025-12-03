@@ -5,9 +5,9 @@ using namespace Eigen;
 
 // Define the function L_prime
 double L_prime(double u) {
-  if(u >= -1 && u <= 1) {
-    return 3.0/2.0*u - pow(u, 3)/2;
-  } else if (u > 1) {
+  if (u >= -1.0 && u <= 1.0) {
+    return 1.5 * u - 0.5 * std::pow(u, 3.0);
+  } else if (u > 1.0) {
     return 1.0;
   } else {
     return -1.0;
@@ -16,29 +16,43 @@ double L_prime(double u) {
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-NumericMatrix bootstrap_individual(int B, Eigen::VectorXd epsilon_hat, Eigen::MatrixXd X, Eigen::MatrixXd W_hat, Eigen::MatrixXd S_hat_sqrt_inverse) {
-  int n = X.rows();
-  int p = X.cols();
+NumericMatrix bootstrap_individual(
+  const int B,
+  const Eigen::VectorXd& epsilon_hat,
+  const Eigen::MatrixXd& X,
+  const Eigen::MatrixXd& W_hat,
+  const Eigen::MatrixXd& S_hat_sqrt_inverse
+) {
+  const int n = X.rows();
+  const int p = X.cols();
   
-  NumericMatrix bootstraps(p, B); // ← 每列是一次bootstrap，每行为某个系数
+  // Each column is one bootstrap draw; each row corresponds to a coefficient
+  NumericMatrix bootstraps(p, B);
   
   for (int b = 0; b < B; ++b) {
-    NumericVector z = rnorm(n);
-    Map<VectorXd> Z(as<Map<VectorXd>>(z));
+    // Generate multiplier weights Z
+    NumericVector z = Rcpp::rnorm(n);
+    Map<VectorXd> Z(z.begin(), n);
     Eigen::VectorXd ans = Eigen::VectorXd::Zero(p);
     
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < n; ++j) {
         if (i != j) {
-          ans += L_prime(epsilon_hat[i] - epsilon_hat[j]) * (X.row(i) - X.row(j)) * (Z[i] + Z[j]);
+          double lij = L_prime(epsilon_hat(i) - epsilon_hat(j));
+          double zij = Z(i) + Z(j);
+          double s   = lij * zij; // scalar
+
+          // (X.row(i) - X.row(j)) is a RowVector
+          RowVectorXd diff = X.row(i) - X.row(j); // 1×p
+          ans.noalias() += diff.transpose() * s; // p×1
         }
       }
     }
 
-    ans = S_hat_sqrt_inverse * W_hat * ans / (n * (n - 1));
+    ans = (S_hat_sqrt_inverse * W_hat * ans) / double(n * (n - 1));
 
     for (int j = 0; j < p; ++j) {
-      // bootstraps(j, b) = ans(j);  // 存储第 j 个系数的偏差项
+      // bootstraps(j, b) = ans(j);
       bootstraps(j, b) = std::abs(ans(j));
     }
   }

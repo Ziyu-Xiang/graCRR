@@ -84,7 +84,7 @@ void grad_with_Laplacian(double *der, double *y, double *x, double *xbeta,
             diff_y = y[i] - y[j];
             diff_xbeta = xbeta[i] - xbeta[j];
             u = diff_y - diff_xbeta;
-            coeff = -L_h_prime(u, h);  // 负号来自链式法则
+            coeff = -L_h_prime(u, h);
 
             for (k = 0; k < p; k++) {
                 der[k] += coeff * (x[i*p + k] - x[j*p + k]);
