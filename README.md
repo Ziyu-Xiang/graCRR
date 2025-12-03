@@ -21,7 +21,7 @@ The methods are robust to heavy-tailed errors and incorporate structural informa
 
 # Usage
 
-- [x] [graCRR-manual](https://github.com/Ziyu-Xiang/graCRR/inst/graCRR-manual.pdf) ------------ Details of the usage of the package.
+- [x] [graCRR-manual](https://github.com/Ziyu-Xiang/graCRR/tree/main/inst/graCRR-manual.pdf) ------------ Details of the usage of the package.
 
 # Example
 
