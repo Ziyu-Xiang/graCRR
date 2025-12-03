@@ -1,0 +1,18 @@
+Package: graCRR
+Type: Package
+Title: graCRR
+Version: 0.1.0
+Authors@R: c(person(given = "Ziyu", family = "Xiang", role = c("aut", "cre"), email = "xiangziyu@stu.sufe.edu.cn"), person(given = "Xiangyong", family = "Tan", role = c("aut")), person(given = "Shishuo", family = "Guo", role = c("aut")), person(given = "Xu", family = "Liu", role = c("aut")))
+Author: Ziyu Xiang [aut, cre], Xiangyong Tan [aut], Shishuo Guo [aut], Xu Liu [aut]
+Maintainer: Ziyu Xiang <xiangziyu@stu.sufe.edu.cn>
+Description: Provides methods for estimation and inference in high-dimensional linear models using graph-assisted convoluted rank regression (CRR). The package implements a Forward and Backward Stagewise (Fabs) algorithm with lasso and Laplacian penalties, supports EBIC-based selection of the Laplacian penalty, and provides debiased estimators and multiplier bootstrap confidence intervals.
+License: GPL (>= 2)
+LinkingTo: Rcpp, RcppEigen
+Imports: Rcpp, mnormt, Matrix, glmnet
+Repository: github
+URL: https://github.com/Ziyu-Xiang/graCRR
+BugReports: https://github.com/Ziyu-Xiang/graCRR/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+NeedsCompilation: yes

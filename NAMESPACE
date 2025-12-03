@@ -1,0 +1,12 @@
+useDynLib(graCRR, .registration = TRUE)
+import(Rcpp)
+
+importFrom(mnormt, rmnorm)
+import(glmnet)
+importFrom(stats, lm, predict, rnorm, rt, runif, rbinom, quantile)
+
+export(Data_simu)
+export(debias_lap)
+export(ebic.Lfabs)
+export(inference)
+export(Lfabs)
