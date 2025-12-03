@@ -66,9 +66,7 @@ The methods are robust to heavy-tailed errors and incorporate structural informa
    **Computational Statistics & Data Analysis**, **124**, 235–251.
 
 - Zhang, C.-H., & Zhang, S. S. (2014).
-
-  *Confidence intervals for low dimensional parameters in high dimensional linear models*.
-
+  *Confidence intervals for low dimensional parameters in high dimensional linear models.*
   **Journal of the Royal Statistical Society: Series B (Statistical Methodology)**, **76**(1), 217–242.
 
 - Chen, J., & Chen, Z. (2008).
