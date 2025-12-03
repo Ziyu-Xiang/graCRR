@@ -1,5 +1,4 @@
 useDynLib(graCRR, .registration = TRUE)
-import(Rcpp)
 
 importFrom(mnormt, rmnorm)
 import(glmnet)

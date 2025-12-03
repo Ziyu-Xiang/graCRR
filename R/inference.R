@@ -27,10 +27,23 @@ inference = function(X, y, beta_hat, beta_true, debias, G, h, alpha=0.05, B=1000
   W_hat <-  1/term2 * t(inv_gram) * (n*(n-1))
   
   S_hat_sqrt_diag  =  sqrt(diag(W_hat))
-  S_hat_sqrt_inverse = matrix(0,p,p)
-  diag(S_hat_sqrt_inverse) = 1/sqrt(diag(W_hat))  
+  # S_hat_sqrt_inverse = matrix(0,p,p)
+  # diag(S_hat_sqrt_inverse) = 1/sqrt(diag(W_hat))
+  # bootstraps = bootstrap_individual(B=B,epsilon_hat,X,W_hat,S_hat_sqrt_inverse)
   
-  bootstraps = bootstrap_individual(B=B,epsilon_hat,X,W_hat,S_hat_sqrt_inverse)
+  S_hat_sqrt_inverse = 1/sqrt(diag(W_hat)) # length p vector
+  Z = rnorm(n*B)
+  param = c(n, p)
+  bootstraps = .Call("bootstrap_individual",
+                     as.integer(B),
+                     as.numeric(epsilon_hat),
+                     as.numeric(t(X)),
+                     as.numeric(t(W_hat)),
+                     as.numeric(S_hat_sqrt_inverse),
+                     as.numeric(Z),
+                     as.integer(param)
+  )
+  
   Q = apply(bootstraps, 1, quantile, 1 - alpha)
   
   val = list(cover = (debias - S_hat_sqrt_diag * Q < beta_true) & 
