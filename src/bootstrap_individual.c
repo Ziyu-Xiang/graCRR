@@ -64,13 +64,12 @@ void _bootstrap_individual(double *boot, double *ans, double *tmp,
 
 SEXP bootstrap_individual(SEXP B_, SEXP epsilon_hat_, SEXP X_, SEXP W_hat_,
                           SEXP S_hat_sqrt_inverse_, SEXP Z_, SEXP Param) {
-  int B, n, p;
+  int B, p;
   int *param;
   double *epsilon_hat, *X, *W_hat, *S_inv_sqrt, *Z;
   
   B           = INTEGER(B_)[0];
   param       = INTEGER(Param);
-  n           = param[0];
   p           = param[1];
   epsilon_hat = REAL(epsilon_hat_);
   X           = REAL(X_);
