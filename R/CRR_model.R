@@ -27,6 +27,52 @@ L_h_double_prime <- function(u, h) {
   return(second_derivative)
 }
 
+make_Lh_functions <- function(h) {
+  
+  Lh1 <- function(u) {
+    matrix(
+      L_h_prime(as.vector(u), h),
+      nrow = nrow(u),
+      ncol = ncol(u)
+    )
+  }
+  
+  Lh2 <- function(u) {
+    matrix(
+      L_h_double_prime(as.vector(u), h),
+      nrow = nrow(u),
+      ncol = ncol(u)
+    )
+  }
+  
+  list(Lh1 = Lh1, Lh2 = Lh2)
+}
+
+multi_factor <- function(eps, Lh1, Lh2) {
+  eps <- as.numeric(eps)
+  n <- length(eps)
+  if (n < 2) stop("Need at least n>=2 residuals.")
+  
+  D <- outer(eps, eps, "-")     # D[i,j] = eps[i] - eps[j]
+  off <- !diag(n)              # i != j
+  
+  # B_hat = average of L_h'' over i != j
+  L2 <- Lh2(D)
+  B_hat <- mean(L2[off])
+  
+  # m_hat[i] = average of L_h' over j != i, conditional on eps_i
+  L1 <- Lh1(D)
+  m_hat <- rowSums(L1 * off) / (n - 1)
+  
+  # A_hat = average of m_hat[i]^2
+  A_hat <- mean(m_hat^2)
+  
+  if (abs(B_hat) < .Machine$double.eps) stop("B_hat is numerically zero; variance blows up.")
+  factor <- (A_hat / (B_hat^2))
+  
+  return(factor)
+}
+
 calculate_inv_gram <- function(x, G, k = NULL) {
   n <- nrow(x)
   p <- ncol(x)

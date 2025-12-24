@@ -1,5 +1,5 @@
-\name{inference}
-\alias{inference}
+\name{infer_boot}
+\alias{infer_boot}
 \title{
     Bootstrap-based inference for graph-assisted convoluted rank regression
 }
@@ -8,11 +8,12 @@
     via graph-assisted convoluted rank regression. Given an initial estimator,
     its debiased version, and a graph structure \code{G}, the function applies
     a multiplier bootstrap based on the smoothed rank loss to construct
-    marginal confidence intervals for each coefficient and to evaluate empirical
-    coverage when the true coefficients are known.
+    marginal confidence intervals for each coefficient. When the true coefficients
+    are provided, the function additionally evaluates empirical coverage in
+    simulation studies.
 }
 \usage{
-    inference(X, y, beta_hat, beta_true, debias, G, h, alpha=0.05, B=1000)
+    infer_boot(X, y, beta_hat, beta_true = NULL, debias, G, h, alpha = 0.05, B = 1000)
 }
 \arguments{
   \item{X}{
@@ -27,16 +28,17 @@
     \code{ebic.Lfabs}).
   }
   \item{beta_true}{
-    A numeric vector of length \eqn{p} containing the true regression
-    coefficients. This is used to assess empirical coverage of the confidence
-    intervals in simulation studies.
+    Optional. A numeric vector of length \eqn{p} containing the true regression
+    coefficients. If provided, it is used to assess empirical coverage of the
+    confidence intervals in simulation studies; if \code{NULL} (default), the
+    coverage component is not returned.
   }
   \item{debias}{
     A numeric vector of length \eqn{p} giving the debiased estimator of the
     regression coefficients, for example from \code{debias_lap}.
   }
   \item{G}{
-	A square matrix representing the weighted graph structure of the predictors.
+	  A square matrix representing the weighted graph structure of the predictors.
     Each entry \eqn{G[i, j]} indicates the weight of the edge between node \eqn{i} and node \eqn{j}.
     A value of zero means no edge is present. Diagonal entries are ignored.
   }
@@ -56,14 +58,22 @@
 \value{
 A list with the following components:
   \item{cover}{
-    A logical vector of length \eqn{p}. The \eqn{j}-th entry is \code{TRUE} if
-    the true coefficient \eqn{\beta^{\ast}_j} is contained in the constructed
-    confidence interval around the debiased estimator, and \code{FALSE}
-    otherwise.
+    If \code{beta_true} is provided, a logical vector of length \eqn{p}. The \eqn{j}-th
+    entry is \code{TRUE} if the true coefficient \eqn{\beta^{\ast}_j} is contained
+    in the constructed confidence interval, and \code{FALSE} otherwise. If
+    \code{beta_true = NULL}, this component is \code{NULL}.
   }
   \item{length}{
     A numeric vector of length \eqn{p} giving the lengths of the marginal
     confidence intervals for each coefficient.
+  }
+  \item{lower}{
+    A numeric vector of length \eqn{p} giving the lower endpoints of the
+    marginal confidence intervals.
+  }
+  \item{upper}{
+    A numeric vector of length \eqn{p} giving the upper endpoints of the
+    marginal confidence intervals.
   }
 }
 \references{
@@ -95,5 +105,5 @@ beta_hat <- fit_init$beta
 beta_db <- debias_lap(X, y, beta_hat, G, h = 1)
 
 ## Bootstrap-based inference
-res <- inference(X, y, beta_hat, beta_true, beta_db, G, h = 1)
+res <- infer_boot(X, y, beta_hat, beta_true, beta_db, G, h = 1)
 }

@@ -6,10 +6,11 @@ It provides tools for:
 - forward–backward stagewise (Fabs) estimation with lasso and Laplacian penalties
 - EBIC-based selection of the Laplacian penalty
 - debiasing for inference
-- bootstrap-based confidence intervals
-- simulation tools
+- inference based on asymptotic normality, including standard errors, confidence intervals, and p-values
+- optional multiplier bootstrap procedures for interval construction
+- simulation tools for method evaluation
 
-The methods are robust to heavy-tailed errors and incorporate structural information through graphical relationships among predictors.
+The proposed methods are robust to heavy-tailed errors and incorporate structural information through graphical relationships among predictors.
 
 # Installation
 
@@ -44,12 +45,16 @@ The methods are robust to heavy-tailed errors and incorporate structural informa
     ## Step 2: Debiasing
     beta_db <- debias_lap(X, y, beta_hat, G, h = 1)
     
-    ## Step 3: Bootstrap-based inference
-    res <- inference(X, y, beta_hat, beta_true, beta_db, G,
-                     h = 1, alpha = 0.05, B = 500)
+    ## Step 3: Inference based on normal approximation
+    res_norm <- infer_norm(X, y, beta_hat,
+                            beta_true = beta_true,
+                            debias = beta_db,
+                            G = G, h = 1,
+                            inv_method = "Tan2024")
     
-    res$cover   # coverage indicators
-    res$length  # confidence interval lengths
+    res_norm$cover    # coverage indicators (simulation only)
+    res_norm$length   # confidence interval lengths
+    res_norm$p_value  # two-sided p-values for H0: beta_j = 0
 
 
 # References

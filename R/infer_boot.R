@@ -1,5 +1,5 @@
 #---------- Inference ----------#
-inference = function(X, y, beta_hat, beta_true, debias, G, h, alpha=0.05, B=1000){
+infer_boot = function(X, y, beta_hat, beta_true = NULL, debias, G, h, alpha=0.05, B=1000){
   
   pairs_full <- function(n) {
     # fast construction: create all ordered pairs (i,j) with i != j
@@ -46,9 +46,22 @@ inference = function(X, y, beta_hat, beta_true, debias, G, h, alpha=0.05, B=1000
   
   Q = apply(bootstraps, 1, quantile, 1 - alpha)
   
-  val = list(cover = (debias - S_hat_sqrt_diag * Q < beta_true) & 
-               (debias + S_hat_sqrt_diag * Q > beta_true),
-             length = 2*S_hat_sqrt_diag * Q)
+  if (is.null(beta_true)) {
+    val = list(
+      cover  = NULL,
+      length = 2*S_hat_sqrt_diag * Q,
+      lower  = debias - S_hat_sqrt_diag * Q,
+      upper  = debias + S_hat_sqrt_diag * Q
+    )
+  } else {
+    val = list(
+      cover = (debias - S_hat_sqrt_diag * Q <= beta_true) &
+        (debias + S_hat_sqrt_diag * Q >= beta_true),
+      length = 2*S_hat_sqrt_diag * Q,
+      lower  = debias - S_hat_sqrt_diag * Q,
+      upper  = debias + S_hat_sqrt_diag * Q
+    )
+  }
   
   return(val)
 }
